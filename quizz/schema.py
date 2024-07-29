@@ -1,6 +1,7 @@
 import graphene
 from .query import Queryy
 from .mutation import *
+from graphql_auth.schema import UserQuery, MeQuery
 
 
 class Mutation(graphene.ObjectType):

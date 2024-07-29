@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-
+from graphql_auth.schema import UserQuery, MeQuery
 from .models import AddUser, Answer, Category, Questions, Quizes
 
 class CategoryType(DjangoObjectType):
@@ -58,4 +58,7 @@ class Queryy(graphene.ObjectType):
     #      return Questions.objects.all()
            
         
+class Query1(MeQuery,UserQuery, graphene.ObjectType):
+    pass
     
+SSchema= graphene.Schema(query=Query1)
