@@ -61,4 +61,3 @@ class Queryy(graphene.ObjectType):
 class Query1(MeQuery,UserQuery, graphene.ObjectType):
     pass
     
-SSchema= graphene.Schema(query=Query1)

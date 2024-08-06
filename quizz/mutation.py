@@ -1,7 +1,7 @@
 import graphene
 from .models import *
 from .query import *
-
+from graphql_auth import mutations
 
 class CategoryMutation(graphene.Mutation):
     
@@ -20,7 +20,7 @@ class CategoryMutation(graphene.Mutation):
 
 
 
-class CategoryMutation(graphene.Mutation):
+class CategoryupdateMutation(graphene.Mutation):
     
     class Arguments:
         id= graphene.ID(required = True)
@@ -38,7 +38,7 @@ class CategoryMutation(graphene.Mutation):
     
     
     
-class CategoryMutation(graphene.Mutation):
+class CategorydeleteMutation(graphene.Mutation):
     
     class Arguments:
         id= graphene.ID(required = True)
@@ -53,3 +53,15 @@ class CategoryMutation(graphene.Mutation):
        
         Category.delete(updatedcategory)
         return "deleted"
+    
+
+class AuthMutation(graphene.ObjectType):
+    register = mutations.Register.Field()
+    token_auth = mutations.ObtainJSONWebToken.Field()
+    verify = mutations.VerifyAccount.Field()
+    pass_change= mutations.PasswordChange.Field()
+    deleteuser= mutations.DeleteAccount.Field()
+    passreset = mutations.PasswordReset.Field()
+    update= mutations.UpdateAccount.Field()
+
+

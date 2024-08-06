@@ -9,6 +9,17 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import environ
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Now you can use the environment variables
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG') == 'True'
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 from pathlib import Path
 # import django.utils.translation as translation 
@@ -17,6 +28,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -44,7 +58,9 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphql_auth',
-    'django_filters',
+    
+   
+   
 ]
 
 MIDDLEWARE = [
@@ -146,12 +162,51 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'quizz.AddUser'
 GRAPHENE = {
-    'SCHEMA': 'quizz.schema.schema',  
+    'SCHEMA': 'quizz.schema.SSchema',
+    # 'quizz.schema.SSchema'  
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
         ]
 }
-AUTHENTICATIO_BACKEND=[
-   'graphql_auth.backends.GraphQLAuthBackend'
+AUTHENTICATION_BACKENDS=[
+   'graphql_auth.backends.GraphQLAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+GRAPHQL_JWT={
+    'JWT_ALLOW_ANY_CLASSES':[
+        'graphql_auth.mutations.Register',
+        'graphql_auth.mutations.ObtainJSONWebToken',
+        'graphql_auth.mutations.VerifyAccount'
+                        
+    ],
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LONG_RUNNING_REFRESH_TOKEN': True,
+}
+EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT =  os.getenv('EMAIL_PORT') 
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Custom setting. To email
+RECIPIENT_ADDRESS = os.getenv('RECIPIENT_ADDRESS')
+
+
+
+# PHONE_VERIFICATION = {
+#     "BACKEND": "phone_verify.backends.twilio.TwilioBackend",
+#     "OPTIONS": {
+#         "SID": "fake",
+#         "SECRET": "fake",
+#         "FROM": "+14755292729",
+#         "SANDBOX_TOKEN": "123456",
+#     },
+#     "TOKEN_LENGTH": 6,
+#     "MESSAGE": "Welcome to {app}! Please use security code {security_code} to proceed.",
+#     "APP_NAME": "Phone Verify",
+#     "SECURITY_CODE_EXPIRATION_TIME": 3600,  # In seconds only
+#     "VERIFY_SECURITY_CODE_ONLY_ONCE": False,  # If False, then a security code can be used multiple times for verification
+# }
